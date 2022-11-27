@@ -1,0 +1,76 @@
+create database store ;
+USE store;
+
+
+create table countries(
+code_countries int primary key ,
+name_countries varchar(20) unique ,
+continent_name varchar(20) not null
+);
+
+create table user(
+id int primary key ,
+full_Name varchar(20),
+email varchar(25) unique ,
+gender char(1) check (gender = 'F' Or gender = 'M'),
+data_of_birth varchar(15),
+creates_at datetime,
+country_code int  ,
+foreign key (country_code) references countries(code_countries)
+);
+
+alter table user
+modify column creates_at datetime default CURRENT_TIMESTAMP();
+
+create table orders(
+id int primary key ,
+user_id int ,
+stautus varchar(6) check (stautus ='start' OR stautus='finish' ),
+created_at datetime default CURRENT_TIMESTAMP(),
+foreign key (user_id)references user(id)
+
+);
+
+
+create table products
+(
+id int primary key ,
+nameP varchar(10) not null ,
+price int default 0,
+statusP varchar(10) check (statusP='valid'or statusP = 'expired' ),
+created_at datetime
+
+);
+
+create table order_products(
+order_id int ,
+products_id int ,
+quantity int default 0,
+foreign key (order_id)references orders(id),
+foreign key (products_id)references products(id)
+);
+
+
+ ALTER TABLE orders
+ RENAME COLUMN stautus to statusO;
+## I try rename COLUMN to the correct syntax but is not accept
+
+
+insert into countries values (1 , 'saudi' , 'Asia');
+select * from countries;
+insert into user values (1 , 'nouf fahad' , 'nouf4.fahad@outlok.sa ', 'F','19-8-19998',CURRENT_TIMESTAMP, 1);
+select * from user;
+
+insert into  orders values (1,1,'start',CURRENT_TIMESTAMP);
+## check for states it is work
+
+
+insert into products values (2,'shoes','300','valid',CURRENT_TIMESTAMP);
+##  null is not work with  check
+
+select * from products;
+
+insert into order_products values (1,2 ,0);
+## null is not work
+select * from order_products;
+
